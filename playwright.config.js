@@ -22,33 +22,32 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: 'https://stitch.test.tools.bbc.co.uk/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    launchOptions:{
-      slowMo: 1000
-    }
+    launchOptions: {
+      slowMo: 1000,
+    },
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-
       name: 'setup',
       testMatch: /auth\.setup\.js/,
     },
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         storageState: path.resolve(__dirname, 'playwright/.auth/user.json'),
-       },
-     
-     dependencies: ['setup'],
+      },
+
+      dependencies: ['setup'],
     },
 
-   /* {
+    /* {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
@@ -86,4 +85,3 @@ export default defineConfig({
   //   reuseExistingServer: !process.env.CI,
   // },
 });
-
