@@ -8,9 +8,9 @@ test('has title', async ({ page }) => {
 
   // Click the email text box link.
   await page.locator('#email').click();
-  await page.locator('#email').fill('graphicstestuser@bbc.co.uk');
+  await page.locator('#email').fill(process.env.BBC_LOGIN_USER_EMAIL);
   await page.locator('#password').click();
-  await page.locator('#password').fill('E3@pq8ud');
+  await page.locator('#password').fill(process.env.BBC_LOGIN_USER_PASSWORD);
   await page.getByRole('button', { name: 'Log in' }).click();
 //await page.locator('//button').click();
  // await page.getByRole('id', { name: 'email' }).click();
