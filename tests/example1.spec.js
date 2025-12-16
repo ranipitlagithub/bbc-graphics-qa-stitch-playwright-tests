@@ -1,34 +1,23 @@
-import { test as setup, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { Page } from 'playwright';
-import { authenticator } from 'otplib';
-import path from 'path';
+import { LoginPage } from '../tests/loginPage.spec';
 
-const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
-const secret = 'ZU3JW764YQZ4FVQVX637ZIV2B3PXBEQP';
-const token = authenticator.generate(secret);
+  test('homepage tests', async ({ page }) => {
+  
+  // await expect(page.locator('h1')).toContainText('Homepage');
+  await page.locator('section').filter({ hasText: '00:48:00SHORT: Watch: Four' }).getByRole('button').click();
+  await expect(page.locator('#app')).toContainText('Less info');
+  await page.getByRole('button', { name: 'Less info' }).click();
+  await page.getByRole('button', { name: 'Reveal user menu' }).click();
+  await expect(page.locator('#app')).toContainText('User Management');
+  await expect(page.locator('#app')).toContainText('Logout');
+  await page.getByRole('button', { name: 'Reveal user menu' }).click();
+  await page.getByRole('button', { name: 'Manage' }).click();
+  await expect(page.getByRole('contentinfo')).toContainText('User guide');
+  await expect(page.getByRole('contentinfo')).toContainText('Contact');
+  await expect(page.getByRole('contentinfo')).toContainText('Monitor exports');
+  await page.getByRole('button', { name: 'Save' }).click();
 
-try {
-  const isValid = authenticator.check(token, secret);
-  } catch (err) {
-    console.error(err);
-}
-
-//otpauth://totp/BBC%20Login%20CodeSTAGE:rani.pitla@bbc.co.uk?secret=4WWR2M7QHRYRPKYT25FWD2EBZOHYMBDK&issuer=BBC%20Login%20CodeSTAGE
-//otpauth://totp/BBC%20Login%20CodeSTAGE:rani.pitla@bbc.co.uk?secret=ZU3JW764YQZ4FVQVX637ZIV2B3PXBEQP&issuer=BBC%20Login%20CodeSTAGE
-setup('authenticate', async ({ page }) => {
-  await page.goto('https://stitch.test.tools.bbc.co.uk/');
-  await page.getByRole('textbox', { name: 'email' }).fill('pitlar01');
-  await page.getByRole('textbox', { name: 'email' }).press('Tab');
-  await page.getByRole('textbox', { name: 'password' }).fill('xxxxx');
-  await page.getByRole('button', { name: 'Log in' }).click();
  
-  await page.getByLabel('code').fill(token);
-  await page.getByRole('button', { name: 'Submit' }).click();
-
-  await page.getByRole('link', { name: ':48:00' }).click();
-  await expect(page.locator('#app')).toContainText('Translate');
-  await page.getByRole('link', { name: 'Stitch TEST' }).click();
-
-  await page.context().storageState({ path: authFile });
 });
